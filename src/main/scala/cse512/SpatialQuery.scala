@@ -5,10 +5,10 @@ import org.apache.spark.sql.SparkSession
 object SpatialQuery extends App{
   def contains( queryRectangle:String, pointString:String ) : Boolean = {
     val rect = queryRectangle.split(",")
-    val pt = point.split(",")
-    val rect = rect.map(_.toInt)
-    val pt = pt.map(_.toInt) 
-    if (pt(0) >= rect(0) && pt(1) >= rect(1) && pt(0) <= rect(2) && pt(1) <= rect(3) ){
+    val pt = pointString.split(",")
+    val rectangle = rect.map(_.toInt)
+    val point = pt.map(_.toInt) 
+    if (point(0) >= rectangle(0) && point(1) >= rectangle(1) && point(0) <= rectangle(2) && point(1) <= rectangle(3) ){
         return true
     }
     return false
