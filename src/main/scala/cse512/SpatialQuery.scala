@@ -6,8 +6,8 @@ object SpatialQuery extends App{
   def contains( queryRectangle:String, pointString:String ) : Boolean = {
     val rect = queryRectangle.split(",")
     val pt = pointString.split(",")
-    val rectangle = rect.map(_.toInt)
-    val point = pt.map(_.toInt) 
+    val rectangle = rect.map(_.toDouble)
+    val point = pt.map(_.toDouble) 
     if (point(0) >= rectangle(0) && point(1) >= rectangle(1) && point(0) <= rectangle(2) && point(1) <= rectangle(3) ){
         return true
     }
