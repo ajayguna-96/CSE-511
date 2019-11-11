@@ -23,8 +23,6 @@ object SpatialQuery extends App{
     val x = (pt1(0)-pt2(0))*(pt1(0)-pt2(0))
     val y = (pt1(1)-pt2(1))*(pt1(1)-pt2(1))
     val dist = sqrt(x+y)
-    //val d = distance.map(._toDouble)
-    
     if(dist <= distance)
       return true
     
