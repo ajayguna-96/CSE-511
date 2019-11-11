@@ -2,6 +2,8 @@ package cse512
 
 import org.apache.spark.sql.SparkSession
 
+import scala.math.sqrt
+
 object SpatialQuery extends App{
   def contains( queryRectangle:String, pointString:String ) : Boolean = {
     val rect = queryRectangle.split(",")
@@ -11,6 +13,21 @@ object SpatialQuery extends App{
     if (point(0) >= rectangle(0) && point(1) >= rectangle(1) && point(0) <= rectangle(2) && point(1) <= rectangle(3) ){
         return true
     }
+    return false
+  }
+  def within (point1:String, point2:String, distance:Double) : Boolean = {
+    val p1 = point1.split(",")
+    val pt1 = p1.map(_.toDouble)
+    val p2 = point2.split(",")
+    val pt2 = p2.map(_.toDouble)
+    val x = (pt1(0)-pt2(0))*(pt1(0)-pt2(0))
+    val y = (pt1(1)-pt2(1))*(pt1(1)-pt2(1))
+    val dist = sqrt(x+y)
+    //val d = distance.map(._toDouble)
+    
+    if(dist <= distance)
+      return true
+    
     return false
   }
   def runRangeQuery(spark: SparkSession, arg1: String, arg2: String): Long = {
@@ -51,7 +68,7 @@ object SpatialQuery extends App{
     pointDf.createOrReplaceTempView("point")
 
     // YOU NEED TO FILL IN THIS USER DEFINED FUNCTION
-    spark.udf.register("ST_Within",(pointString1:String, pointString2:String, distance:Double)=>((true)))
+    spark.udf.register("ST_Within",(pointString1:String, pointString2:String, distance:Double)=>((within(pointString1, pointString2, distance))))
 
     val resultDf = spark.sql("select * from point where ST_Within(point._c0,'"+arg2+"',"+arg3+")")
     resultDf.show()
@@ -68,7 +85,7 @@ object SpatialQuery extends App{
     pointDf2.createOrReplaceTempView("point2")
 
     // YOU NEED TO FILL IN THIS USER DEFINED FUNCTION
-    spark.udf.register("ST_Within",(pointString1:String, pointString2:String, distance:Double)=>((true)))
+    spark.udf.register("ST_Within",(pointString1:String, pointString2:String, distance:Double)=>((within(pointString1, pointString2, distance))))
     val resultDf = spark.sql("select * from point1 p1, point2 p2 where ST_Within(p1._c0, p2._c0, "+arg3+")")
     resultDf.show()
 
